@@ -1,3 +1,4 @@
+import { Types } from 'mongoose'
 import { genSalt, hash } from 'bcryptjs'
 import { UserModel } from 'src/user/user.model'
 import { Injectable, NotFoundException } from '@nestjs/common'
@@ -10,6 +11,7 @@ export class UserService {
 	constructor(
 		@InjectModel(UserModel) private readonly UserModel: ModelType<UserModel>
 	) {}
+
 	async byId(id: string): Promise<DocumentType<UserModel>> {
 		const user = await this.UserModel.findById(id).exec()
 
@@ -55,5 +57,23 @@ export class UserService {
 	}
 	async delete(_id: string) {
 		return this.UserModel.findByIdAndDelete(_id).exec()
+	}
+
+	async toggleFavorite(movieId: Types.ObjectId, user: UserModel) {
+		const { _id, favorites } = user
+		await this.UserModel.findByIdAndUpdate(_id, {
+			favorites: favorites.includes(movieId)
+				? favorites.filter((id) => id.toString() !== movieId.toString())
+				: [...favorites, movieId],
+		})
+	}
+	async getFavoriteMovies(_id: Types.ObjectId) {
+		return this.UserModel.findById(_id, 'favorites')
+			.populate({
+				path: 'favorites',
+				populate: { path: 'genres' },
+			})
+			.exec()
+			.then((data) => data.favorites)
 	}
 }

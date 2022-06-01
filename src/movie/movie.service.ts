@@ -78,6 +78,14 @@ export class MovieService {
 		if (!movies) throw new NotFoundException('Movies not found')
 		return movies
 	}
+
+	async updateRating(id: string, newRating: number) {
+		return this.MovieModel.findByIdAndUpdate(
+			id,
+			{ rating: newRating },
+			{ new: true }
+		).exec()
+	}
 	//Admin
 
 	async byId(id: string) {
