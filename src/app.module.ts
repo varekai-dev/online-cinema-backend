@@ -10,6 +10,7 @@ import { GenreModule } from './genre/genre.module';
 import { FileModule } from './file/file.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ActorModule } from './actor/actor.module';
+import { MovieModule } from './movie/movie.module';
 
 @Module({
 	imports: [
@@ -25,6 +26,7 @@ import { ActorModule } from './actor/actor.module';
 		FileModule,
 		CloudinaryModule,
 		ActorModule,
+		MovieModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],
