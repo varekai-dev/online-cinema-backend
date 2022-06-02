@@ -13,10 +13,9 @@ import {
 	UsePipes,
 	ValidationPipe,
 } from '@nestjs/common'
-import { Auth } from 'src/auth/decorators/Auth.decorator'
+import { Auth } from 'src/auth/decorators/auth.decorator'
 import { IdValidationPipe } from 'src/pipes/id.validation.pipe'
 import { Types } from 'mongoose'
-import { GenreIdsDto } from './dto/genreIds.dto'
 
 @Controller('movies')
 export class MovieController {
