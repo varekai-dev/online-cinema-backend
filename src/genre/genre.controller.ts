@@ -27,7 +27,7 @@ export class GenreController {
 
 	@Get('collections')
 	async getCollections() {
-		return this.genreService.getCollection()
+		return this.genreService.getCollections()
 	}
 
 	@Get()
