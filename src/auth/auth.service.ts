@@ -31,6 +31,8 @@ export class AuthService {
 
 	async register({ email, password }: AuthDto) {
 		const salt = await genSalt(10)
+		const userExist = await this.UserModel.findOne({ email })
+		if (userExist) throw new UnauthorizedException('User already exists')
 		const newUser = new this.UserModel({
 			email,
 			password: await hash(password, salt),
