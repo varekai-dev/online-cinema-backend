@@ -1,3 +1,4 @@
+import { restorePasswordDto } from './dto/restorePassword.dto'
 import { ConfigService } from '@nestjs/config'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
@@ -8,6 +9,7 @@ import { RefreshTokenDto } from './dto/refreshToken.dto'
 import { InjectSendGrid, SendGridService } from '@ntegral/nestjs-sendgrid'
 import { AuthDto } from './dto/auth.dto'
 import { UserModel } from '../user/user.model'
+import { resetPasswordDto } from './dto/resetPassword.dto'
 
 @Injectable()
 export class AuthService {
@@ -27,6 +29,43 @@ export class AuthService {
 			user: this.returnUserFields(user),
 			...tokens,
 		}
+	}
+
+	async resetPassword(email: string) {
+		const user = await this.findByEmail(email)
+		if (user) {
+			const token = await this.issueVerificationToken(String(user._id))
+
+			const message = {
+				to: email,
+				from: 'serhijsav@gmail.com',
+				subject: 'Online Cinema restore password',
+				text: 'Online Cinema restore password',
+				html: `<h3>To reset password follow link <a href="${this.ConfigService.get(
+					'CLIENT_URI'
+				)}/auth/reset-password?token=${token}">link</a></h3>`,
+			}
+
+			await this.sendGridService.send(message)
+			return 'Email with link to reset password sent'
+		}
+	}
+
+	async restorePassword(body: resetPasswordDto) {
+		const { token, password } = body
+		const result = await this.jwtService.verifyAsync(token)
+		if (!result) throw new UnauthorizedException('Invalid token or expired!')
+
+		const findUser = await this.UserModel.findById(result._id)
+		if (!findUser) throw new UnauthorizedException('User not found')
+
+		const salt = await genSalt(10)
+		const newPassword = await hash(password, salt)
+		await this.UserModel.updateOne(
+			{ _id: findUser._id },
+			{ password: newPassword }
+		)
+		return 'Password changed'
 	}
 
 	async register({ email, password }: AuthDto) {

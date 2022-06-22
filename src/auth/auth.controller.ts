@@ -11,6 +11,8 @@ import {
 import { AuthService } from './auth.service'
 import { AuthDto } from './dto/auth.dto'
 import { RefreshTokenDto } from './dto/refreshToken.dto'
+import { resetPasswordDto } from './dto/resetPassword.dto'
+import { restorePasswordDto } from './dto/restorePassword.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -34,6 +36,20 @@ export class AuthController {
 	@Get('verify-email')
 	async verifyEmail(@Query('token') token: string) {
 		return this.authService.emailVerification(token)
+	}
+
+	@UsePipes(new ValidationPipe())
+	@HttpCode(200)
+	@Post('reset-password')
+	async restorePassword(@Body() body: resetPasswordDto) {
+		return this.authService.restorePassword(body)
+	}
+
+	@UsePipes(new ValidationPipe())
+	@HttpCode(200)
+	@Post('restore-password')
+	async resetPassword(@Body('email') email: string) {
+		return this.authService.resetPassword(email)
 	}
 
 	@UsePipes(new ValidationPipe())
