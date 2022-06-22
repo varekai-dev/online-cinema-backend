@@ -23,7 +23,7 @@ export class RatingService {
 
 	async averageRatingByMovie(movieId: Types.ObjectId | string) {
 		const ratingsMovie: RatingModel[] = await this.RatingModel.aggregate()
-			.match({ movieId: new Types.ObjectId(movieId) })
+			.match({ movieId: String(movieId) })
 			.exec()
 
 		return (

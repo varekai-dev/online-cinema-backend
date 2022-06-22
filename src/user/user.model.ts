@@ -17,6 +17,9 @@ export class UserModel extends TimeStamps {
 	@prop({ default: false })
 	isVerified?: boolean
 
+	@prop({ default: null })
+	avatarPath?: string
+
 	@prop({ default: [], ref: () => MovieModel })
 	favorites?: Ref<MovieModel>[]
 }

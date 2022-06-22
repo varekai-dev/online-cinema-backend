@@ -26,6 +26,9 @@ export class UserService {
 		if (isSameUser && String(_id) !== String(isSameUser._id)) {
 			throw new NotFoundException('Email already exists')
 		}
+		if (dto.avatarPath) {
+			user.avatarPath = dto.avatarPath
+		}
 		if (dto.password) {
 			const salt = await genSalt(10)
 			user.password = await hash(dto.password, salt)

@@ -14,6 +14,7 @@ import { MovieModule } from './movie/movie.module'
 import { RatingModule } from './rating/rating.module'
 import { TelegramModule } from './telegram/telegram.module'
 import { SendGridModule } from '@ntegral/nestjs-sendgrid'
+import { CommentModule } from './comment/comment.module';
 
 @Module({
 	imports: [
@@ -39,6 +40,7 @@ import { SendGridModule } from '@ntegral/nestjs-sendgrid'
 		MovieModule,
 		RatingModule,
 		TelegramModule,
+		CommentModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],
