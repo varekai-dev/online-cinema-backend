@@ -5,6 +5,8 @@ import {
 	UsePipes,
 	ValidationPipe,
 	HttpCode,
+	Get,
+	Query,
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { AuthDto } from './dto/auth.dto'
@@ -26,6 +28,12 @@ export class AuthController {
 	@Post('login/access-token')
 	async getNewTokens(@Body() dto: RefreshTokenDto) {
 		return this.authService.getNewTokens(dto)
+	}
+
+	@HttpCode(200)
+	@Get('verify-email')
+	async verifyEmail(@Query('token') token: string) {
+		return this.authService.emailVerification(token)
 	}
 
 	@UsePipes(new ValidationPipe())
