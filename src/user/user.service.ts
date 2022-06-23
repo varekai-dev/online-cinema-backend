@@ -62,7 +62,7 @@ export class UserService {
 		return this.UserModel.findByIdAndDelete(_id).exec()
 	}
 
-	async toggleFavorite(movieId: Types.ObjectId, user: UserModel) {
+	async toggleFavorite(movieId: Types.ObjectId, user) {
 		const { _id, favorites } = user
 		await this.UserModel.findByIdAndUpdate(_id, {
 			favorites: favorites.includes(movieId)
